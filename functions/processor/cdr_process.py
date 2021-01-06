@@ -1,8 +1,10 @@
 import json
+from decimal import Decimal
+
 import boto3
 import os
 import logging
-import time
+import datetime
 import uuid
 
 dynamodb = boto3.resource('dynamodb')
@@ -17,8 +19,11 @@ def aggregate_cdrs(event, context):
 
     table = dynamodb.Table(os.environ['CDR_TABLE'])
 
-    timestamp = str(time.time())
+    now = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
+    data_in = float(cdr['data_in']) / 1024
+    data_out = float(cdr['data_out']) / 1024
+    
     item = {
         'id': str(uuid.uuid1()),
         'imsi': cdr['imsi'],
@@ -26,10 +31,10 @@ def aggregate_cdrs(event, context):
         'msisdn': cdr['msisdn'],
         'record_date': cdr['date'],
         'duration': cdr['duration'],
-        'data_in': cdr['data_in'],
-        'data_out': cdr['data_out'],
+        'data_in': Decimal(str(data_in)),
+        'data_out': Decimal(str(data_out)),
         'ip': cdr['ip'],
-        'createdAt': timestamp,
-        'updatedAt': timestamp,
+        'createdAt': now,
+        'updatedAt': now,
     }
     table.put_item(Item=item)
