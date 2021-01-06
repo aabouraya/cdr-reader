@@ -3,6 +3,7 @@ import boto3
 import os
 import logging
 import time
+import uuid
 
 dynamodb = boto3.resource('dynamodb')
 
@@ -19,7 +20,8 @@ def aggregate_cdrs(event, context):
     timestamp = str(time.time())
 
     item = {
-        'id': cdr['imsi'],
+        'id': str(uuid.uuid1()),
+        'imsi': cdr['imsi'],
         'imei': cdr['imei'],
         'msisdn': cdr['msisdn'],
         'record_date': cdr['date'],

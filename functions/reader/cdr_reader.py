@@ -1,6 +1,8 @@
 import boto3
 import os
 import json
+import logging
+
 
 s3 = boto3.client('s3')
 sqs = boto3.client('sqs')
@@ -8,11 +10,13 @@ queue_url = sqs.get_queue_url(QueueName=os.environ['CDR_QUEUE'])['QueueUrl']
 
 
 def load_cdrs(bucket, key):
+    logging.debug("load the file from the s3 bucket")
     response = s3.get_object(Bucket=bucket, Key=key)
     return response['Body'].iter_lines()
 
 
 def publish_cdr(msg):
+    logging.debug("send message to the SQS")
     response = sqs.send_message(
         QueueUrl=queue_url,
         MessageBody=msg

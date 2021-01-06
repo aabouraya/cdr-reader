@@ -1,10 +1,11 @@
 Serverless POC
 ==============
 
-this is a POC `Not A Real Business Case` to demonstrate the capabilities of serverless architecture using serverless framework and AWS cloud
+this is a POC `Not A Real Business Scenario` to demonstrate the capabilities of serverless architecture using serverless framework and AWS cloud
 provider
 
-----------
+#### Diagram
+![POC design diagram](images/design.png)
 
 ### POC Scenario
 

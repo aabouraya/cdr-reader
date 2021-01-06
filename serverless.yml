@@ -20,8 +20,6 @@ provider:
   lambdaHashingVersion: 20201221
   profile: serverless-admin
   region: eu-central-1
-  timout: 10
-  memory: 128
   environment:
     CDR_QUEUE: "knowhow-cdrs"
     CDR_TABLE: "processes_cdrs"
@@ -40,6 +38,9 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.CDR_TABLE}"
 package:
   individually: true
+  exclude:
+    - images/**
+    - README.md
 
 custom:
   bucket: knowhow-cdrs
@@ -55,18 +56,18 @@ functions:
             - suffix: .cdr
   aggregate_cdrs:
     handler: functions/processor/cdr_process.aggregate_cdrs
-    reservedConcurrency: 10
+    reservedConcurrency: 20
     events:
       - sqs:
           arn:
             Fn::GetAtt:
-              - MyQueue
+              - CdrQueue
               - Arn
           batchSize: 1
 
 resources:
   Resources:
-    MyQueue:
+    CdrQueue:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: ${self:provider.environment.CDR_QUEUE}
