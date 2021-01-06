@@ -23,7 +23,7 @@ def aggregate_cdrs(event, context):
 
     data_in = float(cdr['data_in']) / 1024
     data_out = float(cdr['data_out']) / 1024
-    
+
     item = {
         'id': str(uuid.uuid1()),
         'imsi': cdr['imsi'],
