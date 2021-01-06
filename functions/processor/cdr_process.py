@@ -19,10 +19,10 @@ def aggregate_cdrs(event, context):
 
     table = dynamodb.Table(os.environ['CDR_TABLE'])
 
-    now = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+    now = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
 
-    data_in = float(cdr['data_in']) / 1024
-    data_out = float(cdr['data_out']) / 1024
+    data_in = round(float(cdr['data_in']) / 1024, 2)
+    data_out = round(float(cdr['data_out']) / 1024, 2)
 
     item = {
         'id': str(uuid.uuid1()),
